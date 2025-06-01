@@ -1,0 +1,660 @@
+데이터베이스
+(+4)
+- 매주 학습 내용을 작성하여 LMS의 "토론"에 저장할 것!
+- 중간시험 : 4월 22일(화) a교시 (18시)
+- 중간 : "데이터베이스 모델," 기말 : "정규화" 중요!
+
+
+Ⅰ. SQL (씨퀄)
+1. DDL : DB 스키마 구축 (데이터 정의 언어)
+	- 테이블 맨 윗 줄 만드는 것 (테이블 형태 정하기)
+	- 동아리 회원 목록
+	- 데이터가 가져야 할 데이터 종류 기입
+	- 기본키(primary key), 후보키(candidated key), 외래키(foreign key)
+	- cascade(연쇄적인) => 관계설정되어 있는 테이블에서 하나의 개체가 삭제되었을 때, 관계설정되어 있는 것도 함께 삭제되는 것.
+	- on delete cascade : 연속적으로 참조된 데이터 삭제
+		ex) playlist 안에 있는 노래를 song에서 지우면 playlist에서도 사라진다.
+	- on delete restrict : 참조된 데이터 삭제 불가
+		ex) playlist 안에 있는 노래를 song에서 지우면 playlist와 song의 연결을 지울 수 없기에 오류가 발생한다
+	- primary key => key 값을 지정함
+	- generated always as identity => 고유 id를 생성
+
+	- 데이터베이스 삭제 : drop database
+	- alter table : 테이블 애트리뷰트 추가, 삭제, 변경할 때 사용
+		추가 : add		타입 변경 : modify	이름 변경 : change	삭제 : drop
+	- Backtick(`) : 사용자 지정 이름 만들 때 사용
+	- DECIMAL(7,2) : 숫자 7자리를 쓰는데 2자리는 소수점 자리임.
+	- show create table : 테이블 생성 정보 출력
+
+
+2. DML (데이터 조작 언어) : 데이터 처리 (insert, select, delete, update => CRUD)(구현문)
+	- DDL 작업 후 추가 데이터 넣기
+	- Join -> 조인, left Join (왼쪽 우선순위)
+	- 관계 설정하면 설정된 값이 중복으로 나오고, 나뉘어 출력
+	- left join : playlist의 모든 데이터를 가져오고 listsong의 데이터를 palylist와 비교하며 같은 값이면 listsong의 데이터를 가져오고 아니면 NULL 값을 채운다.
+
+	- 문자열 내에 ' 포함 -> " "로 감싸야 함		 문자열 내 "가 포함 -> ' '로 감싸야 함.
+	- As : 컬럼 이름 변경
+	※ null을 쓸 때 "="이 아닌 is null 또는 is not null로 적어야 함!
+	- 카티션 프로덕트 -> join 또는 cross join 사용
+	★★★ Equijoin : 각 테이블의 동일한 애트리뷰트 모두 연결하여 출력
+	★★★ join on (= inner join on) : join using보다 많이 씀.		
+	★ Natural join : 애트리뷰트 이름이 같다면 자동 연결
+	※ join 앞에 as가 생략되어 있어 잘못 적으면 카티션 프로덕트 문제가 발생할 수 있다!
+
+※ 절차적 DML : what과 how를 명세 (Host Language), 한번에 하나의 레코드만 처리
+※ 비절차적 DML : what만 명세 (SQL), 한 번에 여러개 레코드 처리, 질의어, 독자적 대화식 사용 (커맨드 타입), 추상적 표현
+
+	
+
+
+3. DCL (데이터 통제 언어) : DB 관리 
+	- 테이블 삭제 : drop table
+	- DB 접근 권한 제어
+	- Transaction 작업
+	- 백업
+※ 제어 내용 : 데이터 보안(security), 무결성(integrity), 데이터 회복(recovery), 병행 수행(concurrency)
+
+※ 왠만한 테이블을 만들 때 하나의 테이블 안에 쪼개지 않도록 한다!
+
+	- Distinct : 중복제거
+	- Like : 부분 매칭
+	- concat : 합친 문자열 또는 합집합
+	★ order By (정렬) : 오름차순(ASC) 또는 내림차순(DESC) 정렬
+	- Limit :  개수 제한
+	- Exists 및 not exists 
+	★ group by : 그룹 지정 (후 Having (그룹별 속성을 산출) 도 올 수 있음.)
+	★ Ifnull
+
+Ⅱ. DBMS (Database Management System) = DB Engine = DB
+시험에 출제되면 DBMS ≠ DB인 것을 유의할 것!
+
+☆ 포함관계 : Database System > DBMS
+☆ Database System의 4가지 구성 요소
+1. Hardware
+2. Software (DBMS, Application)
+3. Database (통합, 공유)
+4. Users (DBA -> 관리자, 응용 프로그래머, 엔드 유저)
+
+
+Ⅲ. 데이터베이스 환경
+Decision-Making (의사결정) : 끊임없는 선택의 연속
+Data : 현실 세계로부터 관찰이나 측정을 통하여 얻어지는 사실이나 값.
+Information : 의사결정을 가능케 하는 지식, Data의 유효 해석이나 상호관계
+
+ⅰ. 정보화 구축 데이터 활용
+1. ERP(Enterprise Resource Planning) : 기업 전반 데이터 관리 소프트웨어
+2. DSS(Decision Support System) : 의사 결정 지원 시스템
+3. ☆ Data Warehouse : DSS를 위해 준비된 데이터
+4. Date Mining : Date Warehouse에서 지식을 찾아내는 과정
+5. KMS(Knowledge Management System) : 지식을 생성, 저장, 가공, 공유시키는 시스템, 검색 엔진 (지식 검색)
+	ex) 시험 족보, 리포트, 결과보고서 등
+6. 빅데이터
+7. 딥러닝
+
+
+※ 정보 과정
+I(Information) = P(D)
+		       Processor(Data)
+
+
+ⅱ. 데이터베이스 정의
+★ 특징
+	- 통합된(intergrated) 정보 : 데이터 중복x, 최소의 중복, 통제된 중복
+	- 디바이스 공간에 데이터 저장(stored) : 접근 가능한 저장 매체 저장
+	- 연속적인(persistent) 데이터 : input, output, work queue, control statement등 같은 임시 데이터 제외
+	- 공유된(shared) 정보 : 공동으로 소유, 유지, 이용하는 데이터
+
+★ 특성
+	- 실시간(Real-time) 접근성 : 실시간 처리 및 응답
+	- 계속적인(continuous) 변화 : insert, delete, update
+	- 동시 공용(sharing)
+	★ - 내용에 의한 참조 : 위치나 주소가 아닌 값에 따라 참조 -> Associative addressing, Content reference
+	★★ ("Associative addressing"과 "Content reference"은 주소가 없음 -> key로 접근해야 함.)
+
+※ 구조
+논리적 구조(logical organization) : 논리적 레코드. 데이터의 개념적 구조, 데이터의 논리적 배치
+물리적 구조(physical organization) : 저장 레코드, 데이터의 실제 구조, 물리적 배치, 추가 정보(인덱스, 포인터 체인, 오버플로) 포함
+
+
+Ⅳ. 데이터베이스 관리 시스템
+ⅰ. File(파일) System
+	★ - 불일치성(Inconsistency) : 각자 자신만의 파일 사용 (응용 프로그램이 분산되어서 제어하기 어려움)
+	- 파일 중심 자료 처리 시스템 한계 : 논리적 파일 구조 -> 물리적 파일 구조로 구현, 파일의 공용 불가능, 물리적 데이터 구조에 대한 접근 방법 구현 필요
+	- 문제점 : 데이터 종속성(dependency), 데이터 중복성(data redundancy)
+
+ⅱ. 데이터 종속성 ( ≒그래픽카드)
+	- 저장 구조 or 접근 전략 변경
+	- 응용 프로그램의 로직과 코드로 구현
+※ 데이터 독립성 필요한 이유?	-> 동일 데이터의 두 응용 프로그램이 다른 뷰를 가질 수 있음!
+	ex) Field : 10진수 OR 2진수 		->	DBMS : 전환
+	ex2) DBA(DataBase Administator)	->	새로운 데이터 추가, 새로운 표준 채택, 응용 프로그램 우선순위변경, 새로운 타입 저장 장치 사용
+
+ⅲ. 데이터 중복성 (Data Redundancy) : 한 시스템 안의 같은 내용의 데이터가 중복된 저장 관리
+※ 문제점 (CE SI)
+	- Consistency(일관성) : 중복 데이터 간의 불일치
+	- Security(보안성) : 중복 데이터 -> 같은 수준으로 접근 통제
+	- Economics(경제성) : 중복 저장 공간 및 중복 수정	(No 중요)
+	- ★★ Intergriity(무결성) : 의미적 오류 ( 결함x, 테이블을 계속 쪼개는 이유)
+
+ⅳ. 데이터베이스 관리 시스템(DBMS) : 응용 프로그램과 데이터 사이의 중재자, 모든 응용프로그램들이 데이터베이스를 공용 관리해주는 SW 시스템 (원기둥)
+※ 필수 기능
+	- DD(Definition) : 테이블 생성, 하나의 저장 구조, 데이터 조직 기능
+	※ 정의 기능 요건 : 논리적 구조 및 물리적 구조, Mapping(사상) 명세
+	- DM(Multipulation) : insert, delete, update, 항상 결함이 없는 상태로 변화, DB간의 InterFace
+	※ 조작 기능 요건 : 사용 easy한 도구, 연산 명세 가능, 효율적 접근
+	- DC : 제어, Transaction 처리(DTL)
+	※ 제어 기능 요건 : 무결성 유지, 보안 및 권한 검사, 병행 수행 제어(Concurrency Control)
+
+ⅴ. 데이터 독립성(Indemendency)	-> DBMS의 궁극적 목적!
+1. 논리적 데이터 독립성
+	- 논리적 데이터 구조 변경 가능 	ex) 데이터 합체
+	- 응용 프로그램 효율적 개발 가능
+2. 물리적 데이터 독립성
+	- 물리적 데이터 구조 변경 가능	ex) 데이터 형태 변환
+	- 저장 장치 효율적 개발
+
+
+
+Ⅴ. 데이터베이스 시스템 구성
+Database  System : 데이터베이스로 데이터를 저장관리하여 정보생성하는 컴퓨터 중심 시스템
+
+ⅰ. 3단계 데이터베이스 구조 (E -> C -> I, E CI)
+External level (외부 스키마) -> 개인 뷰, ☆ Conceptual level (개념 스키마) -> 기관 전체 뷰, Internal level (내부 스키마) -> 저장 장치 뷰
+
+ⅱ. Schema 
+	- 각 레벨의 스키마 : 구조 제약 조건을 기술한 메타 데이터 집합
+	- 외부 스키마 (부분 스키마) : 사용자 관점의 데이터베이스, 전체 DB의 논리적 부분 (Sub Schema)
+	- 개념 스키마 (일반 공통 스키마) : 범 기관 관점의 데이터베이스, 전체적인 통합된 데이터 구조
+	- 내부 스키마 : 저장 장치 관점의 데이터베이스, 개념 스키마의 저장구조
+
+ⅲ. 사상 (Mapping)
+1. 외부/개념 단계간의 사상 : 응용 인터페이스, 논리적 데이터 독립성 제공, 외부/ 개념 스키마 간의 대응관계
+2. 개념/내부 단계간의 사상 : 저장 인터페이스, 물리적 데이터 독립성,  개념 / 내부 스키마 간의 대응관계
+★★ ※ 스키마는 date dictionary (데이터 사전, 카탈로그)에 저장
+※ 스키마 다이어그램 	->	스키마 그래픽 형태
+
+ⅳ. ★ Metadata : 시스템 DB에 저장되어 있는 데이터
+	- 데이터 사전 : DB에 저장된 모든 개체들의 정의나 명세의 정보를 유지/관리, 시스템 카탈로그 or 시스템 데이터베이스라고 부름.
+	- 데이터 디렉토리 (data directory) : 데이터베이스의 데이터를 접근하는데 필요한 위치 정보 관리 시스템
+
+※ 차이점
+- 데이터 사전 : 사용자, 시스템 모두 사용
+- 데이터 디렉토리 : 시스템만 사용
+
+ⅴ. 사용자 (데이터베이스를 접근하는 사람) 
+	- 일반 사용자(end user) : 비절차적 DML로 접근, 삽입/삭제/갱신/검색, GUI or CLI 사용
+	- 응용 프로그래머 (application programmer)
+	- 데이터베이스 관리자 (DBA) : DB를 정의 및 제어하는 사람
+
+☆ DBMS = SW
+	- 사용자의 요구에 따라 DB에 대한 모든 연산 수행
+	- 사용자 접근 요구 접수/분석
+	- 이해할 수 있는 형태로 요구 변환
+	- 저장 DB 연산 실행
+	- 외부/내부/개념/저장 구조 간 사상 수행
+
+ⅵ. DBMS 구성요소
+	1. DDL 컴파일러
+		- DDL 스키마 -> 내부 형태 변환 -> 카탈로그에 저장
+		- 메타 데이터
+	2. 질의어 처리기 : 질의문 파싱, 분석, 컴파일하고 목적코드 생성
+	3. 예비 컴파일러 : DML 추출하고 procedure call로 대체, DML -> DML 컴파일러 전달
+	4. DML 컴파일러 : DML -> Object 코드 변환
+	5. 런타임 DB 처리기 : 실행시간 DB 접근, DB 연산 수행
+	6. 트랜잭션 관리자 : 무결성과 권한 제어, 병행 제어와 회복 작업
+	7. 저장 데이터관리자 : 기본 OS 모듈 (File 관리자, Disk 관리자) 이용, DB 접근 제어
+
+ⅶ. DBA 업무
+	1. DB 설계와 운영 : 스키마 정의, 무결성 유지, 데이터 사전 유지 관리 등
+	2. 행정 및 불평 해결 : 시스템 문서화 표준 설정, 사용자 요구 및 불평 해결
+	3. 시스템 감시 및 성능 분석 : 병목 현상, 시스템 성능 청취, 종합 분석
+
+ⅷ. 하드웨어
+	1. 대규모 데이터베이스 (V(ery)L(arge)DB)
+	2. DB 기능 수행을 위한 특수 목적의 하드웨어 : 지능형 저장 장치, 내용식 메모리, 병렬 처리
+
+
+Ⅵ. 관계 데이터베이스
+1. ★★관계 데이터 모델 
+	- 데이터 모델 정의  -> ★ S.O.C (Operation, Consentation)
+	- 릴레이션과 수학적 이론에 기초
+	- 테이블 개념과 다름
+	- 테이블 열 = 필드(field) or 아이템(item) ≒ 애트리뷰트 (attribute)
+	- 테이블 행 = 레코드(record) ≒ 투플 (tuple)
+	- Cardinality = 투플 개수, Degree (차수) = 애트리뷰트 개수
+	- 도메인 : 애트리뷰트들의 값들의 모임
+
+2. 릴레이션(Relations) ≒ '테이블' (추상 객체의 구체적 표현)
+	※ 애트리뷰트 이름은 중복되면 안됨.	-> distinct (구별)해야 된다.
+	- Heading (테이블 위) : 스키마, scheme (정적 성질 -> 변하지 않음, 릴레이션 타입)		(스키마 = scheme)
+	- Body (테이블 아래) : 인스턴스
+
+3. 도메인
+	- 원자성 (Atomic) : 쪼갤 수 없는 가장 작은 의미의 단위 (scalar value), 분해 x
+	- 도메인의 부분 집합 (-> attribute) : 같은 타입의 스칼라 값들의 집합, 단순 도메인과 복합 도메인이 있음.
+		ⅰ. 단순 도메인(단순 애트리뷰트) : 원자값
+		ⅱ. 복합 도메인(복합 애트리뷰트) : 단순 도메인 집합, 복합값
+	☆ 도메인의 중요성 : 비교 (comparison)할 때 씀!
+
+4. 애트리뷰트
+	- 해당 도메인 이름 사용 or 별도 이름 사용 가능
+	- 임의의 도메인이 릴레이션에 담당하고 있는 역할 이름 지정
+
+5. 릴레이션 인스턴스(instance) ⇔ 릴레이션 스킴(scheme)
+	- 동적 성질 : 삽입/삭제/갱신으로 시간에 따라 변함(릴레이션 값).
+	- 어느 한 시점에 릴레이션 R이 포함한 투플들의 집합
+
+6. 릴레이션 R
+	- 개념적 정의 : 스킴(Heading) + 인스턴스(body)
+	- 수학적 정의 : 카티션 프로덕트(Cartesian product)(=곱셈)의 부분 집합
+
+7. ★★★ 릴레이션의 특성 (유무무원 -> 유구무언)
+	- 투플의 유일성 : 중복 투플 x (기본키가 항상 존재, 수학적 집합), 릴레이션 (서로 다른 투플들의  "집합")
+	- 투플의 무순서성 : 릴레이션 (추상적 개념 and 투플 집합), 테이블
+	- 애트리뷰트 무순서성 : 릴레이션 스킴 (애트리뷰트 "집합"), 투플 (쌍 집합), 애트리뷰트의 이름에 의해 참조됨
+	- 애트리뷰트 원자성 
+		ⅰ. 애트리뷰트 값 = 원자 값
+		ⅱ. 정규화 릴레이션 : 동등한 의미 유지
+		ⅲ. 널(null) 값 = 원자 값
+		ⅳ. 도메인 -> 단순 도메인과 복합 도메인
+
+8. 릴레이션 종류
+	- 베이스 릴레이션 (실제 릴레이션) : DB에 저장된 이름을 붙인 릴레이션
+	- 뷰 (가상 릴레이션) : 이름 붙여진 파생 릴레이션
+	- 스냅샷 (Snapshot) : 파생 릴레이션, 가상 아닌 실제 값 저장
+	- cont'd (continued, 앞 페이지와 이어짐, 릴레이션 종류 6개) : 질의 결과, 중간 결과, 임시(temporary) 릴레이션
+
+9. 관계형(Relational) 데이터베이스
+	- DB를 시간에 따라 내용이 변할 수 있는 테이블 형태.
+	- 다양한 degrees의 정규화된 릴레이션 모음으로 인식한 DB.
+	※ 관계 데이터에비스 스키마 : {릴레이션 스킴} + 무결성 제약조건
+	- 파일시스템과 비교 : Relation : file, Tuple : record, Attribute : field
+
+
+
+Ⅶ. Key 및 제약 조건 (4주차 DB 파일 pdf 참고)
+1. 개요
+	★ 무결성(Integrity, 완전한 상태) 규칙 (결함 없는 상태)
+		- 실세계의 특정 제약 조건을 DBMS에 알려 불가능한 값 형상(configuration)이 발생하지 않도록 방지
+	★★★ 모든 DB에 적용되는 두가지 무결성 규칙 (무조건 시험에 나옴!!!) (S.O.C 중 C에 해당)
+		- 개체 무결성(Entity integrity rule) : 기본키 (후보키가 아님!!!★★★)
+			※ 규칙
+			ⅰ. 기본키는 null 일 수 없음 : 애트리뷰트는 null 허용 x
+			ⅱ. Null (≠ blank or zero) : 정보 누락, 정보 부재 데이터 값, SQL에서 IS 또는 IS NOT으로 비교 ("=" 또는 "!=" 사용 x)
+		- 참조 무결성(Referential integrity rule) : 외래키
+			· RESTRICTED : 참조하는 투플이 없을 때만 삭제 가능
+			· CASCASDES : 참조하는 투플도 연쇄적으로 따라가면서 삭제
+			· NULLIFIES (SET NULL) : 매칭되는 참조 투플의 외래키에 NULL 넣음.	
+			※ 규칙
+			ⅰ. 매칭되지 않는 외래키 값이 없어야 함.
+
+2. Key
+	※ 일반적 의미
+		- 자물쇠 푸는 열쇠, 중요하고 핵심적인 부분
+	※ Relation에서의 의미
+		- 투플을 식별할 수 있는 애트리뷰트 집합, 애트리뷰트 일부 사용, 애트리뷰트 전부 사용해도 식별 가능
+
+3.★ 후보키 (Candidate key) : 기본키에 대한 후보, 릴레이션에서 투플을 유일하게 구별할 수 있는 애트리뷰트 집합	->	 (기본키가 아님!!!★★★)
+	- 릴레이션 R의 애트리뷰트 K (복합 애트리뷰트 가능) : 후보키
+★★★ 두 가지 (시간 독립적) 속성을 충족시켜야 함.
+	ⅰ. uniqueness (유일성) : 학생 릴레이션의 (학번, 학과)
+	ⅱ. minimality (최소성) : 학생 릴레이션의 (학번)
+		- K가 복합 애트리뷰트면, 유일성 파괴하지 않고는 K의 어떤 구성요소도 제거 불가능
+		- 필요없는 애트리뷰트 존재 시 후보키가 아님 (-> super key)
+	※ 모든 릴레이션에는 적어도 하나의 후보키 존재!
+
+4. 기본키 : 후보 키들 중 DB설계자가 지정한 하나의 키, 투플-레벨 주소 지정 매커니즘(내용에 의한 참조 -> Content Reference, Associative Addressing)
+
+5. 대체키 : 기본키가 아닌 후보키
+	- 관계형 모델에 associative addressing (연관 주소 지정) 필요
+	- 논리적 레벨에서 처리
+	- 주소가 아닌 "값"으로 투플 선택가능
+	- 모든 관계형 주소 지정 방법은 연관적(associative)임.
+	★ 후보키 = 기본키 + 대체키
+
+6. 외래키 (Foreign Key) : 릴레이션 R1 의 기본키 값과 일치해야 하는 값을 가진 릴레이션 R2의 속성 (복합가능)
+R1 : 참조되는 릴레이션,		R2 : 참조하는 릴레이션
+	- 애트리뷰트 FK (복합 가능) 릴레이션 = R2 : 외래키
+		※ 시간 독립적 속성 충족
+			ⅰ. FK의 각 값 모두 null 이거나 null이 아님.
+			ⅱ. null이 아닌 FK 값 = 기본키 값인 투플이 R1에 존재
+	- 외래키 및 해당 기본 키 : 동일 도메인
+	- 외래키 참조하는 릴레이션에 기본키 구성요소일 필요 없음.
+	- 한 릴레이션에 참조되는 릴레이션이면서 참조하는 릴레이션일 수 있음.
+	- 순환적 참조 가능
+	- R1과 R2는 반드시 다를 필요 없음.
+	- 외래키 = null 가능함.
+
+7. 나머지 무결성
+	ⅰ. 도메인 무결성 : 속성 값은 정의된 도메인에 속해야 함
+	ⅱ. 사용자 정의 무결성 : 속성 값은 사용자가 정의한 제약 조건 만족
+	※ 무결성 보장 방법 : 제약 조건 검사, 트리거
+
+★★★ 결론
+- ★★★ 개체 무결성 : 기본키 ≠ null
+- ★★★ 참조 무결성 : 외래키를 참조하는 릴레이션 = 기본키 or null
+- DB 상태(Database state)가 항상 만족되야 함 (항상 무결성 제약 만족)
+
+
+
+Ⅷ. 관계 대수 (5주차 pdf 참고)
+1. ★★★★  데이터 모델(D) <S.O.C>
+	- 연산: 시스템 입장		데이터 언어 : 사용자 입장
+	★★ 관계 데이터 언어
+		ⅰ. 관계 대수 (relational algebra) : 절차 언어(how) (표현방식은 외우지말기)
+		ⅱ. 관계 해석 (relational calculus) :  비절차 언어(what), 투플 관계해석 및 도메인 관계해석	
+
+2. 관계 대수 (relational algebra)
+- 관계형 모델 데이터 처리 (연산) 부분
+	※ 관계 대수 : 연산 집합
+	※ 할당 연산 : 이름있는 릴레이션 := 대수 표현 	(:=은 파스칼 연산자, 할당문을 의미함.)
+- 관계 대수 (8개 연산자) -> ☆☆ 8개 연산자 다 외워야함!
+	ⅰ. 전통적인 집합 연산 : 합집합(Union), 교집합(intersection), 차집합(difference), 카티션 프로덕트(Cartesian product, 곱집합)
+	ex) A UNION B, A INTERSECT B, A MINUS B, A TIMES B
+	※ union-compatibility(합집합 가능) : 동일한 스키마(동일 애트리뷰트 이름 세트를 가짐, 동일 도메인에서 정의됨.)를 가짐 
+	ⅱ. 릴레이션 연산 : select, projection, ☆☆join, division(별로안씀)
+		=> 피연산자 : 릴레이션, 오퍼레이터 : algebra
+
+3. ★★★ Restriction (select) : σ (sigma)	->	(예제 문제를 염두하라!)
+R(U) : 한 개의 릴레이션
+θ(theta) ∈ {<, ≤, >, ≥, =, ≠ }
+v : 리터럴 값 (literal value)
+- 결합 법칙 성립
+- 선택 조건 만족하는 릴레이션의 수평적 부분집합(-> 단순 비교의 부울 조합)
+ex)	R WHERE C1 AND C2 ≡ (R WHERE C1) INTERSECT (R WHERE C2)
+	σ(학번 = 300) ∩ (과목번호='C312')(등록)	->	학번 = 300 이면서 과목번호 = 'C312'인 '등록' 투플찾기
+
+※ 선택도(selectivity) : 선택 조건에 의해 선택된 투플 비율, 선택도가 적은 것부터 실행
+
+4. projection(프로젝션) : Ⅱ (pi)	->	부분 뽑기
+- 생성된 중복 투플 제거
+- 릴레이션의 수직적 부분집합
+ex)	S WHERE CITY = 'Paris' [S#, SNAME]
+
+5. ★★★ Theta-join (또는 Equijoin) : 나비넥타이 (-> 복합 연산 (순수(prmitive) 연산 x))
+θ ∈ {<, ≤, >, ≥, =, ≠ }
+ex) R [X θ Y] S = (R TIMES S) WHERE X Theta Y		-> 풀어쓰진 않고 이런 의미라는 뜻
+※ theta(θ) : "equals" (=)	->	두 애트리뷰트들의 동일한 값을 가지는 "같다"
+
+6. Natural Join : 나비넥타이
+- 결합 및 교환 법칙 성립
+※ R and S : 공통 애트리뷰트 없을 경우	=>	R JOIN S ≡ R TIMES S
+
+7. Division : ÷ (별로 중요하지 않음)
+
+8. RENAME : ρ (RHO)
+ex) ρ컴학생(성명)(Ⅱ이름(..))	->	"이름" 카디널리티 추출 후 이름 -> 성명으로 바꾸고 컴학생으로 변경하라
+
+9. 순수 관계 연산자 및 복합 연산
+순수(Primitive) 연산 : 하나의 논리적 기능 수행, 다른 연산 이용 x
+복합(Composite) 연산 : 순수 연산을 이용해 표현가능
+
+10. ★ Outerjoin : 투플이 조인할 상대 릴레이션에 대응되는 투플이 없을 경우, 상대를 널 투플로 만들어 결과 릴레이션에 포함.	->	두 조인 릴레이션의 모든 투플들이 결과 릴레이션에 포함됨.
+★ Left outerjoin : 왼쪽 우선, 왼쪽에 있으면 결과에 포함, 오른쪽에 없다면 NULL 채움 (자주 사용됨)
+Right outerjoin : 오른쪽에 있으면 결과에 포함
+
+
+
+Ⅸ. 관계 해석(6주차 pdf 참고)
+★ 관계 해석(Relational calculus) : 응용된 프레디킷(predicate) 해석
+
+1. 관계 해석 종류 : tuple 또는 domain -> 둘 중에 어떤것을 변수로 두나?
+	ⅰ. Tuple 해석 (TRC: Tuple Relational Calculus) : 투플에 대한 범위, 지정한 투플의 값을 취할 수 있는 변수
+	※ 투플 변수 (Tuple Variables)
+		투플 변수 또는 범위변수 : t
+		범위식 : R(t) 	(R: t의 범위 릴레이션)
+	ⅱ. Domain 해석 (DRC: Domain Relational Calculus) : 도메인 요소에 대한 범위(= 필드 값), 지정한 도메인의 원소 값을 값으로 취하는 변수
+	※ 한정 애트리뷰트 : t.A 또는 t[A]
+
+2. 1차 술어 해석 (First-order Predicate Calculus)
+프레디킷 : bool 함수 (True or False)
+	※ 주의점
+		- 인수에 predicate 오면 안됨.		ex) Predicate(func(3)) -> 안됨.
+		- 문장의 주어가 개별 개체
+		- 정량자(Quantifier)가 변수에만 적용, predicate나 함수에 허용 x
+		- Symbol로 표현
+
+3. tuple 관계 해석 : tuple calculus 표현식으로 정의하는 표기법
+질의 : {t | P(t) }	->	P(t)는 tuple 변수 t에 대한 공식 (formula)
+※ 공식은 논리적 접속사로 나열 가능!
+※ 표현식
+- 막대 ( | ) 왼편에 나온 한정 애트리뷰트들 (쉼표로 구분)
+- 막대 오른편에 명세된 조건을 만족하는 결과로 추출됨.
+
+
+4. 공식(Formulas)과 변수
+Atomic formula (원자공식 : 더 이상 쪼갤 수 없는 공식)
+Quantifier (정량자) : 전칭 정량자와 존재 정량자
+Bound Variable (속박변수) : 막대(|)의 오른쪽에"만" 존재하는 변수를 속박.
+Free Variable (자유변수) : 막대의 왼쪽에 존재, 정량자에 한정되지 않은 투플 변수
+
+5. WFF(Well-Formed Formula, 정형식) -> Atom, 논리 연산자, quantifier가 결합된 식
+
+6. domain 관계 해석 : domain calculus 표현식으로 정의하는 표기법
+	1. R(x1,x2,...,xn)
+	2. x Θ y
+	3. x Θ c
+※ 표현식
+- 막대 (|) 왼편에 나온 도메인 변수들 (쉼표로 구분)
+- 막대 오른편에 명세조건을 만족하는 도메인 값을 만드는 투플
+
+※ 총정리
+1. 대수 표현 : Union(합), Intersection(교), difference(차), Cartesian product(곱)
+	데이터 언어식 표현: ((S JOIN SP) WHERE P#='P2') [SNAME]	-> (S JOIN (SP WHERE P#='P2')) [SNAME]	-> P2를 납품하는 공급자 이름 검색
+
+2. 두 개의 릴레이션을 카티션 프로덕트로 사용함 !	 (두 릴레이션 R, S의 카티널리티와 차수가 각각 3,4 와 4, 3일 때)
+	카티널리티 : 3 * 4 = 12		(겹친 것이 없다는 하에 가정함.)
+	차수(degree) : 3 + 4 = 7
+
+3. 제한 (Restriction) : σ (sigma)	->	σ학과 = '컴퓨터' (학생),		σ학번 = 300 ∧ 과목번호='C312'(등록)
+	데이터 언어식 표현 : R WHERE 조건식
+	※ 선택도(selectivity)에 의해 투플의 비율 결정!
+
+4. 프로젝션 (Projection) : π(pi)
+	데이터 언어식 표현 : (S WHERE CITY = 'Paris') [S#, SNAME]
+
+5. Equijoin	: R ⋈(A=B) S = { r * s | r ∈ R ∧ s ∈ S ∧ (r.A = s.B) }		ex) 학생.학번, 등록.학번 (2개)
+6. Natural Join : R ⋈ S 또는 R ⋈N S 		ex) 학번 (1개)	
+	데이터 언어식 표현 : R ⋈N S = π(X ∪ Y) (R ⋈Z=Z S)
+
+7. RENAME : ρ (Rho)	->	ρ컴학생(성명)(π이름(σ학과='컴퓨터'(학생)) -> 학생중 컴퓨터 학과학생이름 검색하고 이름을 성명으로 변경
+
+8. 투플 관계 해석 표현식 : {s.Sname, s.Dept | STUDENT(s)∧(∋e)(ENROL(e) ∧ s.Sno=e.Sno ∧ e.Grade='A')}
+-> 성적이 A인 학생의 이름과 학과 검색
+9. 도메인 관계 해석 표현식
+{xSno, xDept | STUDENT(xSno, xSname, xYear, xDept) ∧ (∋xxSno)(∋xGrade)(ENROL(xxSno, xCno, xGrade, xMidterm, xFinal) ∧ xSno = xxSno ∧ xGrade='A')} -> 성적이 A인 학생의 학번과 학과 검색
+
+
+
+
+--------------------------기말------------------------------
+Ⅰ. 데이터베이스 설계 (04-29 pdf 참고, ※ 과제는 개념, 논리, 물리적 설계 3개 다 포함되어야 할것!)
+1. DB 생명주기
+	요구조건 분석 (Requirement Formulation, 데이터 및 처리 요구 조건) -> 설계(개념(Conceptual Schema Design, 모델링, 독립적 개념 스키마 설계, DBMS 고려 x) 설계 -> 논리(스키마 설계, 인터페이스 설계) -> 물리(세부설계, 응용프로그래밍 작성, clustering)) -> 구현(DDL로 스키마 작성) -> 운영 -> 감시 및 개선
+
+※ 마름모 (Relationship) -> E(Entity)-R(Relationship) Diagram에 쓰임
+※ Clustering : 논리적으로 관련 있는 것들을 물리적으로 관련 있는 곳에 저장
+
+2. DB 설계 전략
+	- 데이터 중심 (data-driven) DB 설계 : DB 내용과 구조 설계				┐
+	- 처리 중심 (processing-driven) DB 설계 : 데이터 처리와 응용 SW 설계		=> 병행적 추진
+
+3. DB 설계 고려사항
+	- ★ 무결성, ★ 일관성
+	- 회복, 보안, 효율성, DB 확장
+
+4. 개념적 스키마 설계 방법 : 뷰 통합 방법 (view integration), 애트리뷰트 합성방법 (Attribute Synthesis), 트랜잭션 모델링 (Transaction modeling)
+
+5. 논리적 설계 (logical design) : 개념적 스키마로부터 목표 DBMS가 처리할 수 있는 논리적 스키마 생성
+	- 요구 조건과 무결성, 일관성 제약 조건 만족
+
+6. 관계 데이터 모델로의 변환 예
+	- 개체 타입 -> 개체 릴레이션(사각형, entity relation)
+	- 관계 타입 -> 관계 릴레이션 (마름모, Relation)
+
+7. 접근 방법 설계
+	- 접근경로
+	- 기본 및 보조 접근경로 설계
+	- 고려사항 ( 응답시간, 저장 공간 효율화, 트랜잭션 처리도 (throughput)
+	- 감시 유틸리티 이용
+
+
+
+Ⅱ. 데이터 모델링
+1. DB 설계
+	ⅰ. 개념적 모델링 -> 개념적 구조	=> 개념적 설계 (conceptual design), Entity, attribute, relationship으로 구성
+	ⅱ. 데이터 모델링 -> 논리적 구조	=> 논리적 설계, 테이블로 구성, 접근방법에 독립적 표현
+	ⅲ. 데이터 구조화 -> 물리적 구조	=> 물리적 설계, 저장 장치에서의 데이터 표현
+
+2. DB 개념
+	- 데이터베이스 설계 (database design)
+	- 개념적 데이터 모델 (conceptual data model)
+	- 논리적 데이터 모델
+
+3. 데이터 모델 (D = <S(데이터구조, structure), O(연산, operation), C(제약조건, constraint)>)
+
+4. Entity Type
+	- 개체 (entity) : 단독 존재하며 다른 것과 구별되는 객체
+	- 애트리뷰트 : 타원형으로 표시
+	※ 애트리뷰트 유형
+		- 단순(simple) 애트리뷰트와 복합(composite) 애트리뷰트
+		- 단일 값(single-valued) 애트리뷰트와 다중 값(multi-valued) 애트리뷰트
+		- derived (유도) 애트리뷰트와 stored (저장) 애트리뷰트
+		- null 애트리뷰트
+
+5. Relationship Type : 개체 집합들 사이의 대응성 (correspondence)
+	※ 관계 타입 유형 -> 1 : 1, 1 : n, n : 1, m : m 중 하나
+	※ 관계 타입 특성
+		- relationship도 애트리뷰트 가질 수 있음
+		- 전체 참여 (total participation) : 집합 A의 모든 개체가 A-B관계에 참여
+		- 부분 참여 (partial participation) : 집합 A의 일부 개체만 A-B관계에 참여
+		★★ 존재 종속 (existence dependence) : 어떤 개체 b의 존재가 개체 a의 존재에 종속
+			-> a 삭제되면 b도 삭제됨. (b는 a에 존재 종속)
+			a : 주 개체 (dominant entity)	 b : 종속 개체 (subordinate entity)
+
+6. E-R 다이어그램 특징
+	- 다 대 다 (n : m) 관계 표시
+	- 다원 관계 (n-ary relationship) 표현 (두개 이상 개체 타입이 하나의 관계에 관련 가능)
+	- 다중 관계 (multiple relationship) 표현 (둘 이상의 관계 존재 가능)
+	- 관계 타입도 애트리뷰트를 가질 수 있음.
+
+7. Key 애트리뷰트 (논리적 설계에 가기 전까지 개념적 설계에는 primary key가 존재하지 않고 key라고 함)
+	- 각 개체마다 상이한 값을 갖는 애트리뷰트
+	- 키 (key, 모든 개체 인스턴스들을 유일하게 식별, 동일 키 값 갖는 두 개 개체 인스턴스 없음)
+
+8. 데이터 모델
+- 관계 나타내는 방법에 따라 관계 데이터 모델 (Relational data model), 계층 데이터 모델 (hierarchical data model), 네트워크 데이터 모델 (network data model)
+- 객체 지향 지원 방법에 따라 객체지향 데이터 모델 (object-oriented), 객체관계 데이터 모델 (object-relational)
+
+
+
+Ⅲ. ★★ 데이터 종속성(dependence) 및 정규화
+1. DB 구축
+	- DB 설계 필요
+	- 개념적 설계
+	- 논리적 설계
+	- 물리적 설계
+
+2. 데이터의 논리적 표현
+	- attribute, entity, relationship 파악 필요
+	- 관련 attribute들을 relation으로 묶음 (효율적 데이터 처리, 데이터 일관성 유지, 데이터 종속성 : attribute들간의 관계성)
+	- 변칙적 성질 예방 (데이터 중복성 배제, ★이상(anomaly))
+	※ 이상(anomaly) 종류
+		- 삭제 이상 (deletion anomaly) : 연쇄 삭제 (triggered deletion)에 의한 정보의 손실
+		- 삽입 이상 (insertion anomaly) : 원하지 않는 정보 강제 삽입
+		- 갱신 이상 (update anomaly) : 중복데이터 일부 갱신으로 정보 모순(inconsistency, 불일치성) 발생
+
+3. 이상의 원인과 해결책
+※ 원인
+- 상이한 종류의 정보를 하나의 릴레이션으로 표현
+- 애트리뷰트간의 종속관계를 하나의 relation에 표현
+
+※ 해결
+★★★ 정규화 (normalization) : 바람직하지 않은 특정 속성 인식 + 보다 바람직한 형태의 관계로 변환할 수 있는 방법 제시
+
+4. ★★ 스키마 설계와 변환
+※ 스키마 설계 : DB의 논리적 설계
+- 애트리뷰트들과 제약 조건(종속성)들을 수집
+- 명시된 제약 조건에 따라 여러 개의 relation으로 분할 => 스키마 변환 (schema transformation)
+
+※ 스키마 변환 원리 ( = 정규화 원칙)
+	정보의 무손실, 데이터 중복성 감소, 분리의 원칙
+
+★★ 정규화 과정 (주어진 관계 집합을 보다 바람직한 형태로 연속적으로 줄여 나가는것)
+1NF (1정규형) -> 2NF -> 3NF -> BCNF -> 4NF -> 5NF 
+
+5. 추론 규칙
+R1 : 반사 (reflexive)
+R2 : 첨가 (augmentaion)
+R3 : 이행 (transitive)
+R4 : 분해 (decomposition)
+R5 : 결합 (union)
+
+6. 1NF : First Normal Form 	-> 모든 도매인이 원자값(atomic value)만으로 된 릴레이션
+7. 2NF를 위한 Anomalies in 1NF
+※ 1NF에서의 이상
+- 삽입 이상 : 개체 무결성
+- 삭제 이상
+- 갱신 이상
+
+※ 1NF 이상의 원인
+- 기본키에 부분 함수 종속된 애트리뷰트가 존재	-> 프로젝션으로 릴레이션을 분해한다. (부분 함수 종속 제거)
+
+8. 2NF : Second Normal Form
+- 1NF이고, 키에 속하지 않은 애트리뷰트들은 모두 기본키에 완전 함수 종속(full FD)되야함.
+- 무손실 분해 (Non-loss decomposition) : 프로젝션하여 분해된 릴레이션은 natural join을 통해 원래 릴레이션으로 복귀 가능, 분해된 릴레이션들로부터 정보를 얻을 수 있으나 역은 성립 x
+- 3NF를 위한 Anomalies ins 2NF : 삽입/삭제/갱신이상 고려, transitive (이행적) FD (TD)가 존재	=> 원인	-> 프로젝션으로 릴레이션을 분해한다. (TD 제거)
+
+9. 3NF : Third Normal Form
+- 2NF이고, 키가 아닌 모든 애트리뷰트들은 기본키에 이행적 함수 종속(transitive FD)되지 않음.
+- 무손실 분해 : 분해된 릴레이션들로부터 정보를 얻을 수 있으나 역은 성립 x
+
+10. BCNF : Boyce/Codd Normal Form
+※ 3NF 약점
+복수의 후보키를 가지고, 후보키들이 복합 애트리뷰트들로 구성되고, 후보키들이 서로 중첩되는 경우 		=> 적용 불가능, 보다 일반적인 BCNF을 제안
+- 릴레이션 R의 모든 결정자(determinant)가 후보키면 R은 BCNF.
+- 릴레이션 R이 BCNF에 속하면 R은 1NF, 2NF, 3NF에 속함 (강한 제3정규형 (strong 3NF))
+
+11. MVD (Multi-Valued Dependency) : 다치 종속
+- 릴레이션 R(A, B, C)에서 어떤 (A,C)값에 대응한 B값의 집합이 A값에만 종속되고 C값에 독립이면 다치 종속 A*B 성립
+- 모든 FD는 MVD나 역은 성립 X
+
+12. 4NF : Fourth Normal Form
+- 릴레이션 R이 BCNF에 속하고, 모든 MVD가 FD이면 R은 4NF (MVD가 없으면 4NF).
+- 릴레이션 R에 MVD A -> B가 존재할 때 R의 모든 애트리뷰트들이 A에 함수 종속(FD)이면 R은 4NF
+
+// 여기서부터 토론 내용 캡처
+13. 조인 종속(Join Dependency)
+- JD를 만족하는 n-decomposable relation은 n개의 프로젝션으로 분해 필요
+
+14. ★정규화 과정 (Normalization Process, 무손실 분해)
+비정규 relation -> 원자값이 아닌 도메인 분해	-> 1NF -> Partial FD (부분 함수종속) 제거 -> 2NF -> TD (이행 함수 종속) 제거 -> 3NF -> Determinant가 후보키가 아닌 FD (함수종속) 제거 -> BCNF -> FD가 아닌 MVD (다치종속) 제거 -> 4NF -> 후보키를 통하지 않은 JD (조인종속) 제거 -> 	5NF
+
+15. 역정규화 (반정규화, denormalization)
+- 성능을 위해 중복 허용
+- 3NF, BCNF 정도까지 고려 (∵ Anomaly에 의한 inconsistency 방지)
+
+16. ★★ 결론
+※ 정규화 과정의 목표
+-> 특정 유형 중복 제거, 특정 이상 방지, 실제 세계 표현, 특정 무결성 제약 조건 시행 단순화
+- 릴레이션 정규화는 실제 데이터값이 아닌 개념적 측면에 다뤄야함.
+	관계 대수 및 해석 : 저장된 데이터 값
+	종속 및 정규화 : 의미 (semantic)
+
+
+
+Ⅳ. Spring Data JPA (MySQL)
+1. ★★ MVC(Model View Controller)가 중요한 이유
+- 데이터는 데이터끼리 처리하여 눈에 보이는 것과 눈에 "안" 보이는 것을 나누어 코드를 예쁘게 작성해야 치명적인 결점이 안 일어난다.
+- 백엔드의 경우 V가 존재하지 않으므로 MC(Model Controller) 역할을 한다.
+
+2. 확장자 ".kt" 에서 변수 코드 작성법
+var : 변할 수 있는 값
+value : 변할 수 없는 값 (= const)
+
+3. JPA 순서도
+User -> Controller -> Service -> Repository -> Model -> DB
+	<-		  <-		<-		    <-		  <-
+
+
