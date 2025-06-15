@@ -1,13 +1,3 @@
-
-public class HelloJAVA {
-	public static void main(String[] args) throws Exception{
-	}
-}
-
-
-/* 	
- 	자바프로그래밍 (객관식의 경우, "모두 고르시오."라고 하는 문제가 많을 예정, 문제는 보통 코드를 보여주고 잘못된 것은?이라고 물음.)
-
 Ⅰ. 자바개요
 	※ 자바가 만들어진 목적
 		- 플랫폼 호환성 문제 해결
@@ -364,8 +354,8 @@ public class HelloJAVA {
 	1. 속성관련 메소드
 		- hashCode() : 객체 해시코드 값 리턴
 		- getClass() : 객체 클래스 정보를 담은 class 객체 리턴, 객체 클래스 이름 리턴
-		- toString() : 객체를 문자열로 리턴
-		- equals(Object obj) : obj의 객체와 현재 객체 비교해서 같으면 true 리턴
+		- toString() : 객체를 문자열로 리턴, 컴파일러에 의한 toString() 자동 변환
+		- equals(Object obj) : obj의 객체와 현재 객체 비교해서 같으면 true 리턴, equals() 재정의(@override)하는 경우 반드시 hashcode()도 함께 재정의
 
 	2. Wrapper 클래스
 		- 자바 기본 데이터 타입을 클래스화한 8개 클래스
@@ -375,10 +365,11 @@ public class HelloJAVA {
 	3. Wrapper 객체 생성
 		Integer i = new Integer(10);	Double d = new Double("3.14");
 		Boolean b = new Boolean(true);	Float f = new Float(3.14f);
+		※ 문자열을 생성자 인자로 사용 	->	character 클래스만 제외하고 나머지 타입은 가능
 		
 	4. 박싱(boxing)과 언박싱(unboxing)	=> JDK 1.5부터 자동(auto) 박싱과 언박싱 지원함.
-		박싱 : 기본 자료형을 Wrapper 클래스 객체로 변환
-		언박싱 : 박싱 반대 변환
+		박싱 : 기본 자료형을 Wrapper 클래스 객체로 변환	ex) Integer ten = new Integer(10);
+		언박싱 : 박싱 반대 변환	ex) int i = ten.intValue();
 
 
 Ⅱ. String 관련 클래스
@@ -388,10 +379,11 @@ public class HelloJAVA {
 			String a = "Hello";		String b = "Hello";	는 똑같이 공유된 공간
 			if(a.equals(b))	// true		if(d.equals(e))	// true
 			if(a == b)	// true			if(d == e) // false
+			if(a == d) // false, String 객체는 힙에 생성되고 공유되지 않기 때문에 다름.
 		
 	※ 주요 메소드
 		- String substring(int s_idx, int e_idx) : 인덱스 s에서 e까지 부분 문자열 반환	
-		- int compareTo(String str) : 0(동일), 음수 (사전 순서 먼저), 양수 (사전 순서 이후)
+		- int compareTo(String str) : 사전순서 비교, 0(동일), 음수 (사전 순서 먼저), 양수 (사전 순서 이후)
 		- String concat(CharSequence cs) : 문자열 결합
 		- String [] split(String regex) : 정규식 기반 문자열 분리
 		- String substring(int index) : 부분 문자열 반환 (공백 제외해서 인덱스 읽음, 3이면 3번째부터 읽음)
@@ -424,15 +416,22 @@ public class HelloJAVA {
 		제네릭 : 구체적 자료형 정해두지 않고 객체 생성 또는 메소드 호출할 때 자료형을 지정하는 일반화 기법, C++의 템플릿과 동일
 			- 원소의 자료형을 변수로 표시 (타입 매개 변수 (type parameter))
 			
-	2. ArrayList<E> 클래스
+	2. ArrayList<E> 클래스 (java.util.ArrayList)
 		- 데이터(원소) 추가, 데이터 제거, 삽입 가능 자료형 : 객체, null, 기본 타입 (자동박싱/언박싱 or Wrapper 객체 사용)
-		
+	
 	3. Iterator<E> 인터페이스 : 원소 순차 검색을 위한 메소드 제공
 		boolean hasNext() : 다음 반복에 원소가 있으면 true
 		E next() : 다음 원소 반환
 		void remove() : 마지막으로 반환된 원소 제거
 		
 		- iterator() 메소드 : 컬렉션 인터페이스 구현 객체에서 iterator 객체 얻을 수 있음, 인덱스 없이 순차적 검색 가능
+		
+	3-1. HashMap<K,V> (java.util.HashMap)
+		- 키를 사용하여 원소에 접근하는 컬렉션, 빠른 삽입 및 검색 가능, ★동기화 지원 x
+		※ 주요 메소드
+			- boolean containsKey(Object key) : 해당 키 포함하면 true 리턴
+			- V replace(K key, V value) : 해당 키 원소를 새로운 원소로 변경
+			- put() = add()
 		
 	4. LinkedList<E> (☆비동기화, Set을 통해 동기화 가능)
 		- java.util.LinkedList, 양방향 연결리스트제공
@@ -512,12 +511,14 @@ public class HelloJAVA {
 		- DataInputStream/DataOutputStream : 문자열을 이진 형태로 입출력, 변수를 바이너리 값 그대로 입출력, 기본 자료형 단위로 데이터 읽고 씀.
 		- ObjectInputStream/ObjectOutputStream : 객체가 가진 데이터들을 순차적 데이터로 변환 입출력 ( -> 직렬화(serialization))
 		
+		※ read() 메소드의 반환형이 int인 이유 : 입력스트림의 끝을 나타내기 위해 -1을 return하지만 byte는 8bit라 -1 값 리턴 불가
+		
 	3. 문자 스트림 클래스 (java.io 패키지에 포함)
-		- Reader/Writer : 추상클래스, 문자 스트림을 다루는 슈퍼 클래스
+		- Reader/Writer(추상클래스) : 문자 스트림을 다루는 슈퍼 클래스
 		- InputStreamReader/OutputStreamWriter : 지정된 문자집합 이용, 바이트와 문자 스트림 연결하는 다리 역할
 			전자 : 바이트를 읽어 문자로 인코딩
 			후자 : 문자를 바이트로 디코딩하여 출력
-		- FileReader/FileWriter : 텍스트 파일 -> 문자 데이터 입출력
+		- FileReader/FileWriter : 텍스트 파일 -> 문자 데이터 입출력	
 		
 	4. 파일 입출력과 예외 처리
 		- 스트림 생성 과정 : FileNotFoundException (파일 경로 오류, 디스크 고장) 발생
@@ -534,15 +535,116 @@ public class HelloJAVA {
 		- 파일의 경로명을 다루는 클래스 (java.io.File, 추상적 표현)
 		- 파일 이름 변경/삭제/디렉토리 생성/크기 등 파일 관리 (but File 객체는 파일 읽/쓰 기능이 없음, 파일 스트림 클래스 이용해야 됨.)
 	
-	7. 직렬화 (serialization)
+	7. 데이터 스트림
+		- DataInputStream 및 DataOutputStream 클래스
+		- 기본 자료형 단위로 데이터 읽/쓰 가능
+	
+	8. 직렬화 (serialization)
+		- ObjectInputtStream과 ObjectOutputStream 클래스
 		- 객체가 가진 데이터들을 순차적 데이터로 변환
 	
-	8. 버퍼 스트림
+	9. 버퍼 스트림
 		- 입출력 데이터를 일시적으로 저장하는 버퍼 사용 -> 입출력 효율 개선
 		목적 : 운영체제의 API 호출 횟수를 줄여 입출력 성능 개선
+		종류 : 바이트 버퍼 스트림, 문자 버퍼 스트림
 	
 	
 	
+Ⅵ. ★★★ 스레드와 멀티태스킹
+	멀티태스킹 - 여러 어플리케이션 동시 시행(컴퓨터 성능 향상)
+	멀티스레딩 - 하나 어플리케이션에서 여러 작업 동시 수행, 각 작업을 스레드로 처리
+	
+	1. process vs thread	=> 컴퓨터 실행 단위
+		프로세스 : 실행중인 하나의 프로그램 (1:1, 1:N), 큰 오버헤드 발생, 고유 실행 환경 가짐, 과도한 작업량과 시간 소모
+		스레드 : 프로세스 내부에 존재, 어플리케이션 내 자원과 메모리 공유, 작업량 적고 짧은 시간 소모
+		
+	2. 자바에서의 멀티태스킹
+		(1) JVM은 한개 응용 프로그램만 실행가능
+		(2) "은 여러 응용 프로그램 실행 불가
+		(3) 하나 응용프로그램이 여러 개 스레드를 가짐.
+	
+	3. 자바 스레드와 JVM
+		자바 스레드 - JVM에 의해 스케쥴되는 실행 단위 코드 블록
+		※ 구성 :	스레드 코드(작업 실행 프로그램 코드), 스레드 정보 (운영체제가 스레드에 대해 관리하는 정보)
+		※ 주의점 : 공유 데이터 동기화 처리
+	
+	4. 스레드 생성
+		java.lang.Thread 클래스 사용, java.lang.Runnable 인터페이스 사용
+	
+	5. Runnable 인터페이스 필요성
+		다른 클래스를 상속하는 경우 스레드를 만들 수 없음 (자바는 단일 상속만 지원)
+		
+	6. 스레드 상태
+		NEW : 생성되었지만 실행준비 x
+		RUNNABLE : JVM에 의해 실행되고 있거나 실행준비되어 스케쥴링 기다리는 상태
+		WAITING : wait() 호출 하여 무한대기	-> notify(), notifyAll()을 불러주기 기다리고 있는 상태
+		TIMED_WAITING : sleep(n) 호출로 n 밀리초 동안 잠을 자는 상태
+		BLOCK : 스레드가 I/O 작업 요청 (JVM = BLOCK 상태)
+		TERMINATED : 종류 상태
+	
+	7. 스레드 우선 순위와 스케쥴링
+		우선순위 : 1(MIN_PRIORITY) ~ 10 (MAX_PRIORITY), 5(NORMAL_PRIORITY)
+		스케쥴링 정책 : 가장 높은 우선 순위의 스레드가 우선적 스케쥴링, 동일 우선순위 경우 라운드 로빈 방식으로 스케쥴링
+		
+		
+	
+Ⅶ. 스레드 동기화
+	1. 동기화(synchronization) : thread 사이 실행순서 제어와 공유 데이터에 대한 접근을 원활하게 하는 기법, 다수 thread가 공유 데이터 접근을 방지
+		※ 방법
+			- Synchronized 키워드 사용 : 임계 영역 지정하여 thread 사이 실행 순서 제어
+				임계 영역(critical section) : thread가 독점적으로 실행하는 영역, 먼저 실행한 thread가 모니터(독점적 사용권한) 소유
+			- wait() - notify()/notifyAll() 메소드 사용 (공유 데이터 접근 제어)
+		
+	2. synchronized 키워드 요약
+		- 스레드 간섭 방지하는 방법
+		- 두개 이상 스레드에 동일 객체 사용하는 경우 : 모든 읽/쓰 연산에 동기화된 메소드 사용
+		- 데드락과(deadlock) 아사(starvation) 문제는 해결 불가
+		
+	3. wait() - notify() 메소드 사용
+		- 동기화 객체 : 두개 이상 thread 사이에 동기화 작업 사용하는 객체
+		- 동기화 메소드 : synchronized 코드 블록 내부에서만 사용 가능
+			wait(), notify()(한개 스래드만 깨울 수 있음, RUNNABLE 상태로 변경), notifyAll(대기중인 모든 스레드 깨우고 모두 RUNNABLE 상태로 변경)
+			
+		
+--------------이후 문제들은 개념들만 알아둘 것--------------------
+Ⅷ. Spring Framework
+	1. Spring Framework
+		- 오픈 소스 애플리케이션 프레임 워크
+		- 중복코드 줄이고 비즈니스 로직 간단 구현 가능
+		
+	2. POJO(Plain Old Java Object)
+		- 순수 옛날 자바 객체
+		- 객체지향 프로그래밍 원칙을 따르는 객체
+		- 프레임워크 없이 돌아가는, 특정 기술에 종속되지 않은 순수 자바 객체
+		
+	3. 스프링 컨테이너(= IoC(Inversion of Control)컨테이너, BeanFactory)
+		- 스프링 컨테이너 관리하는 객체 : 빈(Bean)
+		- Bean 관리한다고 해서 BeanFactory라고 함.
+			ex) 애플리케이션컨텍스트(applicationContext)
+	
+	4. PSA(Portable Service Abstraction)
+		- 잘 만든 인터페이스
+		- 일관된 방식 기술로의 접근 환경을 제공하는 추상화 구조
+	
+	5. Spring Boot
+		- 스프링 프레임워크보다 쉽게 사용하게 만든 프레임워크
+		- 자체적 웹 서버 내장
+		- 자동 설정 Auto Configuration 기능 제공
+		
+		
+Ⅸ. Spring MVC
+	1. MVC 패턴 (Model, View, Container)
+		- 애플리케이션 개발할 때 사용하는 디자인 패턴
+		- 애플리케이션 개발 영역을 MVC로 구분하여 역할에 맞게 코드 작성하는 개발 방식
+		- 유지보수가 쉽고, 시스템 결합도를 낮추고, 애플리케이션 확장성 및 유연성 증가
+		
+	2. Spring MVC 
+		- 스프링 프레임워크에서 MVC2 모델을 더 발전시킨 웹 모듈
+		- 프론트 컨트롤러가 클라이언트의 모든 요청을 받고 요청처리는 개별 컨트롤러(Handler) 클래스로 위임
 	
 	
- */
+	
+Ⅹ. REST API
+	1. REST(Representational State Transfer)
+		- 네트워크 상에서 Client와 Server 사이의 통신 방식 중 하나
+		- CRUD 연산수행을 위해 URI(Resource)로 GET, POST 방식을 사용해 요청을 보내며 자원은 특정형태로 표현하는 API 설계 방법 또는 규칙
