@@ -5,8 +5,6 @@
 - 어떤 기능을 하는지"만" 알아라.
 - 주로 영어의 약자를 잘 출제한다.
 - "W3SCHooL" 검색
-- 과제 : 지뢰찾기의 문제점을 발견하고 수정하라.
-Hint) 과제 지뢰찾기에서 문제점은 지뢰개수 계산에서 발생한다.
 
 
 
@@ -389,6 +387,7 @@ if-else문, 연속 if문, switch 문, while문, for문, do/while문, break문, c
 객체, 함수 -> 딕셔너리에 의해 만들어짐.
 DOM : 브라우저가 HTML 문서 파밍해서 각 요소들을 객체 트리로 정의한 것
 BOM (Brower Object Model) : 브라우저 종류나 크기 등 정보 제공하는 객체들
+객체 지향 프로그래밍(OOP : object-oriented programming) : 우리가 사는 실제 세계가 객체들로 구성된 것
 
 1. ★Date 객체 : 날짜와 시간 저장한 객체, 많이 사용
 	- new Date()
@@ -401,7 +400,8 @@ BOM (Brower Object Model) : 브라우저 종류나 크기 등 정보 제공하�
 문자열 객체 생성 : new String();
 	※ string 객체 메소드
 		- charAt(위치) : 지정된 위치 문자 반환
-		- ★★ indexOf(검색 문자열, 위치) : 지정된 숫자 인덱스에서 시작 -> 지정 문자열이 처음 나타내는 인덱스 반환. 없으면 -1 반환
+		- ★★ indexOf(검색 문자열, 위치) : 지정된 숫자 인덱스에서 시작 -> 지정 문자열이 처음 나타내는 인덱스 반환(0부터 시작). 없으면 -1 반환
+			ex) let s = "A bad workman"; let n = s.indexOf("workman"); document.write(n);	-> 6
 
 	※ 문자열 매칭 : match() 메소드 사용, 정규식은 /regular expression/ 형식
 	※ 문자열 대체 : replace() 메소드 사용
@@ -433,7 +433,7 @@ BOM (Brower Object Model) : 브라우저 종류나 크기 등 정보 제공하�
 
 ※ ★ for in vs for of 
 for in : index나 key값이 돌아오는 것, 객체에 사용 (객체 순회)
-for of : 실제 값 or 키 값, 객체에 사용 불가 (배열 순회)
+for of : 실제 값(value), 객체에 사용 불가 (배열 순회)
 
 6. forEach문 : for loop를 간결하게 함수 형태로 사용한 방법, 주로 서버에서 데이터를 가져와 목록 생성할 때 씀.
 	객체.forEach(function(){})
@@ -449,7 +449,7 @@ Catch : 예외 처리 코드
 
 
 Ⅱ. DOM(Document Object Model)
-DOM : HTML문서의 계층 구조를 트리로 표현
+문서 객체 모델(DOM) : HTML문서의 계층 구조를 트리로 표현 ↔ 웹브라우저 객체(BOM)
 
 ※ id로 HTML 요소 찾기 : x = document.getElementById("main");	-> 문서 안에 id가 "main"인 요소를 찾아 반환
 ※ 태그 이름으로 HTML 요소 찾기 : array = document.getElementByTagName("p");	-> 문서 안의 <p>태그 모두 찾아서 반환
@@ -505,7 +505,7 @@ DOM : HTML문서의 계층 구조를 트리로 표현
 
 2. 이벤트 리스너 설정하기
 - 인라인 방식 : HTML 요소 안에 코드 추가
-- 객체의 비엔트 리스너 속성에 함수 대입
+- 객체의 이벤트 리스너 속성에 함수 대입
 - 객체의 addEventListener() 함수 사용
 - 익명 함수로 이벤트 리스너 작성
 
@@ -562,14 +562,14 @@ mouseover, mouseout 이벤트 : 사용자가 HTML 요소 위에 마우스 올리
 		단점 : 둘 다 관심사 분리(Separation of Concerns) 원칙 위배 ( 코드 복잡해져 개발이 어려움)
 
 	13-2. 요소에 이벤트 핸들러 속성 적용
-		장점 : HTML 코드와 자바스크립트 코드 분리 (관심 분리 원칙 반영 두 코드 분리되어 유지보수 용이)
+		장점 : ★HTML 코드와 자바스크립트 코드 분리 (관심 분리 원칙 반영, 두 코드 분리되어 유지보수 용이)
 		단점 : 한 요소에 하나의 이벤트 핸들러만 설정할 수 있어, 여러 핸들러에 동시 할당 x
 
 	13-3. addEventListener를 사용한 이벤트 리스너 추가
-		장점 : HTML과 자바스크립트 코드 분리, 이벤트에 바인딩 가능
+		장점 : ★HTML과 자바스크립트 코드 분리, 이벤트에 바인딩 가능
 		단점 : DOM 완전 구성전에 이벤트 리스너가 등록되면 오류 발생
 
-	13-4. DOMContentLoaded를 사용한 이벤트 리스너 등록
+	13-4. DOMContentLoaded를 사용한 이벤트 리스너 등록 (DOM 요소 접근 가능, 모든 리소스 로드되는 것을 기다리지 않음)
 		장점 : HTML 요소 안전접근 (오류 발생 감소), 초기 실행 성능 향상
 		단점 : 외부 리소스 로드 전에 실행되므로 다루기 적합하지 않을 수 있음, 대규모 웹 애플리케이션에 적합, 사용자 인터페이스와 관련된 스크립트 초기화에 자주 사용
 
@@ -577,7 +577,7 @@ mouseover, mouseout 이벤트 : 사용자가 HTML 요소 위에 마우스 올리
 		장점 : 이벤트 핸들링에 필요한 모든 요소 초기화 가능
 		단점 : load 이벤트 사용하면 페이지 로딩 시간이 더 길어질 수 있음.
 
-14. 브라우저 객체 모델 (BOM, Browers Object Model)
+14. 브라우저 객체 모델 (BOM, Browser Object Model)
 - 웹 브라우저가 가지고 있는 모든 객체
 - 최상위 객체 : window, 그 아래로 navigator(브라우저 자체 정보), ★ location(현재URL 정보), history(방문 기록 정보), screen(사용자 화면 정보), document(HTML 문서 정보), frames(윈도우 포함 프레임정보) 객체가 있음.
 
@@ -588,7 +588,7 @@ mouseover, mouseout 이벤트 : 사용자가 HTML 요소 위에 마우스 올리
 - window. 을 생략
 - setTimeout() : 일정 시간 후에 인수로 전달된 함수를 한 번만 호출 (단위 : 밀리초)
 - setInterval() : 일정 시간마다 주기적으로 함수 호출, 반드시 개발자가 종료해야함. (단위 : 밀리초)
-- moveTo() : 윈도우 이동 메소드, 절대적으로 위치 이동, moveBy() : 윈도우 이동 메소드, 상대적으로  위치이동
+- moveTo() : 윈도우 이동 메소드, 절대적으로 위치 이동, moveBy() : 윈도우 이동 메소드, 상대적으로 위치이동
 
 16. ★★ location 객체
 protocol// hostname: port/ pathname / serach / hash
@@ -600,11 +600,12 @@ protocol// hostname: port/ pathname / serach / hash
 	※ canvas
 		- HTML의 <canvas> 요소 사용하여 비트맵 기반 그래픽을 렌더링
 		- 픽셀로 반환
-		- 상호작용 많은 그래픽에 적합, 애프리케이션에 주로 사용
+		- 상호작용 많은 그래픽에 적합, 애플리케이션에 주로 사용
 	※ SVG
 		- XML 기반 벡터 그래픽 언어
 		- 도형이나 이미지 확대 및 축소 가능, 품질 저하 x
 		- 도형 크기 조정, 변형, 회전 등 용이
+		- 개별 요소에 대한 접근 가능 (CSS 스타일링 및 JavaScript 조작이 가능)
 - 둘다 웹에서 그래픽 표현하는 두가지 주요 기술
 - 이미지나 그래픽 생성 및 조작에 사용하지만, 접근 방식, 사용사례 및 성능 측면에 서로 다름.
 ★★ 모든 그래픽은 context를 쓴다!
@@ -634,7 +635,7 @@ context.lineCap : 양쪽 끝점 모양 지정. butt, round, square 중 하나
 2. ★ 웹서버 구조
 - 동시에 여러 사용자를 서비스해야한다.
 
-	※ c기반 CGI 프로그래밍의 문제점 : 다수 사용자 지원을 위해 프로세스를 생성해야 하므로 서버부하가 매우 큼.
+	※ c기반 CGI(Common Gateway Interface) 프로그래밍의 문제점 : 다수 사용자 지원을 위해 프로세스를 생성해야 하므로 서버부하가 매우 큼.
 	해결방안 : 쓰레드 기반 프로그래밍으로 해결한다.
 
 3. 프로세스와 쓰레드
@@ -644,13 +645,13 @@ context.lineCap : 양쪽 끝점 모양 지정. butt, round, square 중 하나
 쓰레드(Light Weight Process) : 하나 브라우저에 여러 개 파일 다운로드
 ※ 속도 차이 : 상황에 따라 다르지만 최소 10배이상 "쓰레드 > 프로세스"
 
-4. 인터프리터 기반 서버 프로그래밍 : DeadLock 방지하기 위해 만들어짐
+4. 인터프리터 기반 서버 프로그래밍 : DeadLock 방지하기 위해 만들어짐, but 코어가 많아도 하나만 사용함.
 5. 자바 서블릿(servlet(serv + ~let(작은 조각)), 서버에서 돌아가는 서버코드의 조각)
 ※ 특징
 - 자바 언어 안에 HTML 코드를 넣어야 하는 어려운점이 있음.
 - 네트워크 프로그램
 
-6. JSP (Java Server Pages)
+6. JSP (Java Server Pages)	-> ASP(Active Server Pages)의 영향을 받음.
 - 자바 기반 동적 웹 페이지를 구축한 서버-사이드 언어로 자바 서블릿 기반으로 함.
 - 서블릿과 기능은 동일, 더 편리한 프로그램 작성 가능
 
@@ -659,6 +660,9 @@ context.lineCap : 양쪽 끝점 모양 지정. butt, round, square 중 하나
 
 8. 실제적 웹 서버 구조
 ★ pc와 서버의 차이점 : 가격, 그래픽카드 유무
+- MSA(Micro Service Architecture) : 모든 기능이 하나의 애플리케이션에 포함됨.
+
+※ JSP 안에 자바 코드 추가 방법 : 스크립틀릿(scriptlet), 자바 수식(expression), 자바 선언(declaration)
 
 9. 스크립틀릿 : <% code_block %>		->	자바코드 시작	코드 블록 가능	자바코드 종료
 10. JSP vs 서블릿 차이
@@ -672,7 +676,7 @@ context.lineCap : 양쪽 끝점 모양 지정. butt, round, square 중 하나
 
 
 
-Ⅵ. 모바일 웹페이지와 반응형 웹디자인
+Ⅵ. 모바일 웹페이지와 반응형 웹디자인(RWD, Responsive Web Design)
 1. 반응형 웹디자인 3가지 기법
 	- 미디어 쿼리 (media query) : 실제 화면 크기를 알 수 있고, 화면 레이아웃을 변경할 수 있음.
 		portrait : 세로모드	landscape : 가로모드
@@ -684,9 +688,165 @@ context.lineCap : 양쪽 끝점 모양 지정. butt, round, square 중 하나
 - 화면 크기에 맞는 여러 개의 레이아웃 지정 가능
 
 3. 유동 레이아웃
-- 웹 페이지나 화면 크기에 따라 자동 너비 조정되는 레이아웃
+- 웹 페이지나 뷰포트에 따라 자동 너비 조정되는 레이아웃
 	※ 특징
 		- 고정 픽셀 대신 백분율 단위로 크기 지정
 		- 다양한 화면 크기에 유연하게 반응
 		- 반응형 웹 디자인 (responsive design)의 기본 개념 중 하나
 - flexbox나 grid 레이아웃을 주로 사용
+
+4. Grid 레이아웃
+- 가로 방향 행(row)과 세로 방향 열(column)으로 구성
+
+5. fr(fraction) 단위
+- 그리드 레이아웃에 사용되는 크기 단위
+- 각 열의 너비를 "상대적"으로 정의할 때 편리
+
+6. CSS Flexbox Layout
+- float and flex
+- Flex (1차원적) and Grid (2차원적)
+- Flex vs inline-flex (필요한 만큼의 공간 차지)
+
+7. ★ flex-direction Property (웹페이지 참고)
+- 디폴트값 : class="flex-container (row)"
+- class="flex-container column"
+
+8. flex-wrap Property
+- The flex-wrap Property
+- The flex-nowrap Property
+
+9. The justify-content Property : 정렬
+- start : 왼쪽
+- end : 오른쪽
+- center : 중앙
+- space-between, space-around, space-evenly
+
+10. The align-items Property : 메인축, 교차축, 교차축 즉 상하정렬
+flex-start, flex-end, center, baseline, stretch
+
+11. The align-content Property : wrap가 되었을 때의 상하위치
+flex-start, flex-end, center, space-between, space-around, stretch
+
+12. ★★ 각 아이템의 flex 속성 지정
+	12-1. flex-grow 속성
+		- 기본값(0) : flex container 크기가 커져도 남은 공간 차지 x
+		- 0이상 : 전체 합에서 비율대로 차지
+	12-2. flex-shrink 속성
+		- 기본값 : 1
+		- 속성값 0이면 flex item 크기 감소 x
+	12-3. flex-basis 속성
+		- flex item의 기본 크기 결정 속성
+		- 기본값 : auto (크기 지정 없으면 컨텐츠 크기)
+		- 0이면 기본 크기 0, 남은 공간을 flex-grow 비율대로 설정
+		- width 속성에 사용하는 모든 단위를 속성값에 사용가능
+
+13. flex: 1 1 0 (=flex: 1)의 의미
+- 3가지 flex-grow, flex-shrink, flex-basis 를 한번에 지징하며 설정
+- flex: 1은 "여백을 다 채우라"라는 의미
+
+
+
+Ⅶ. ★★★HTML5 웹스토리지, 파일API, AJAX
+1. ★★ JSON(JavaScript Object Notation) : 자바스크립트 객체 리터럴을 지정하는 방법에서 유래, 객체 -> 텍스트, 텍스트 -> 객체로 만들 때 사용
+2. JSON text와 object 사이의 변환
+Parse : text -> object
+Stringify : object -> text
+
+3. 사용하는 곳
+- 데이터 저장 : 텍스트로 객체 저장 형식, 스트링만 저장할 수 있는 저장소에 복잡 객체를 저장
+- ☆ JSON은 텍스트 형식 데이터
+- 데이터 교환하기 위한 가장 단순 형태
+- 대부분 언어에서 기본 제공
+- web coding
+
+4. HTTP 프로토콜과 쿠키
+- HTTP는 "무상태" 프로토콜(stateless(세션간 데이터 유지x) protocol)
+※ 무상태로 설계한 이유 : 1. 초기 웹 목적이 문서 전송 중심이었음.	2. 서버입장에선 기억안해도 되는 구조.
+※ 쿠키 특징
+- 웹사이트는 자신의 쿠키만 읽을 수 있음.
+- 단순 텍스트 데이터
+- 웹 서버 -> 사용자 웹 브라우저로 보내는 데이터
+- 크기는 4KB 초과 x
+
+5. 세션ID
+- 서버가 생성하여 웹 브라우저로 전달
+- 서버는 클라이언트에 대한 정보 유지
+- 사용자 관리가 편하고, 서버로의 모든 요청에 세션ID를 포함
+
+6. JWT(JSON Web Tokens, 웹 표준)
+- 로그인 정보 표준화하고 토큰에 안전 형태로 저장, 나머지 사용자 정보는 SPA에 관리
+※ 구조
+Header(헤더) : 토큰 타입(JWT)과 해시 알고리즘 지정
+Payload(페이로드) : Registered claims(서버에 필요한 정보가 정의된 클레임), Public claims(충돌 방지 이름을 가진 클레임), Private claims(사용자 정의 클레임)
+※ 장점 : 무상태로 인한 확장성, 보안성
+
+7. HTML5 웹 스토리지
+- 웹스토리지(web storage) : 클라이언트 컴퓨터 브라우저에 데이터 저장하는 메카니즘, 5MB까지 저장 가능, 키/값의 쌍으로 저장
+
+8. 세션 스토리지와 로컬 스토리지
+sessionStorage 객체 : 각 세션마다 데이터 별도 저장, 세션 종료 시 데이터 삭제
+localStorage 객체 : 기한 없는 데이터를 웹브라우저 내부 저장소에 저장, 도메인 다르면 접근 불가
+
+9. 파일 API
+- 웹브라우저가 사용자 컴퓨터에 있는 로컬 파일들을 읽어올 수 있도록 해주는 API
+- 사용자의 명시적 허가가 있어야 하며, 제한된 영역에서만 사용가능
+
+10. ★★★ 비동기 프로그램
+- 시간 오래 걸리는 작업을 수행하는 동안 다른 작업들도 계속할 수 있는 프로그래밍 방식, 주로 입출력 작업, 네트워크 통신 등에 유용
+- 콜백함수 : 비동기 작업 완료되면 호출되는 함수, but 중첩 구조를 가질 수 있어 가독성이 떨어짐.
+- 프라미스(promise) : 비동기 작업의 완료 또는 실패를 나타내는 객체
+- async(비동기함수)와 await : 전자는 항상 프라미스를 반환, 후자는 프라미스 처리될 때까지 함수 일시 중지하고 프라미스가 완료되면 결과 값 반환 -> 가독성 향상
+
+11. ★★★ AJAX(Asynchronous JavaScript and XML), 비동기 방식
+- ★ 전체 페이지를 적재하지 않고 웹페이지 일부를 업데이트할 수 있는 것
+- HTML5, CSS3, 자바스크립트, DOM, XML, XMLHttpRequest 개체 등 기술 사용
+
+12. fetch API
+- XMLHttpRequest (Callback) 개선 버전
+- fetch는 Promise 사용 (Callback 회피 가능), aync/await로 변환 가능
+- 서버로부터 리소스를 가져오기 위한 인터페이스
+
+13. ★★★ MPA와 SPA
+MPA(Multi Page App) : .html로 처리하는 방법 (단순 로직 작성이 어려움)
+SPA(Single Page App) : AJAX를 사용하여 하나의 HTML로 처리하는 방법 (무조건 써야뒈)
+※ SPA 장점 : 모든 정보 유지, 서버코드와 클라이언트 코드 분리, 개발 편리, 성능 높고 비용 저렴
+※ 단점 : 대규모 서비스에서 모든 클라이언트의 기능을 한번에 다운로드해야 함.
+
+14. REST(Representational State Transfer)
+- 서버 API를 만드는 방법
+※ 설계 원칙
+- 따로 만들지 않고 HTTP 원래 제공 기능 최대한 사용
+- 클라이언트-서버 구조
+- Stateless(무상태성) : 이전 요청 상태 기억 x
+- Cache(캐시) 기능 : 받은 응답 다시 요청x 재사용 가능
+- Uniform Interface (일관된 인터페이트) : API 표준화
+- Layered System (계층 구조) : 안전하고 유지보수 쉬움
+- Self-descriptive(자체 설명 가능) : API가 응답만 보고 이해가능
+
+15. ★★ 호출샘플 : 현재 로그인된 사용자(Access Token 소유자)를 가져오는 기능 수행
+16. CORS(Cross-Origin Resource Sharing) : 개발 시 자주 발생하는 문제
+	※ 동일 출처 정책(Same-Origin Policy)
+		- 기본적으로 웹서버에 사용
+		- 다른 출처의 웹페이지에서의 호출 허용하는 방법
+		- 스킴(Scheme), 호스트(Host), 포트(Port)가 모두 같아야 "동일 출처"로 간주
+
+
+
+Ⅷ. SVG, 드래그와 드롭
+1. SVG(Scalable Vector Graphics) : 웹에서 벡터-기반의 그래픽 정의하는데 사용(표준)
+※ 장점 : 크기변경되도 품질손상x, 애니메이션 가능, 생성 및 편집
+
+2. SVG 애니메이션 : <rect> 요소 안에 <animate> 추가
+attributeName : 애니메이션 변화 속성 지정
+from : 속성 시작값 지정
+to : 속성 끝나는 값 지정
+dur : 애니메이션 지속 시간
+
+3. 드래그와 드롭 
+dragstart, drop, dragover, dragenter, drag 이벤트
+
+4. HTML5 웹 워커(Web Worker)	(참고)
+- 자바스크립트를 백그라운드 스레드에서 실행하는 기능
+- 병렬 처리 가능
+- 영상처리, 실시간 텍스트 처리, 로컬 DB 요청 병렬 처리
+- 멀티코어 CPU 환경에서 여러 워커를 동시 실행해 성능 향상 가능
